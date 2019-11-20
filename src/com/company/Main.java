@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 public class Main {
 
     public static void main(String[] args) {
-        String ChromeDriverDirectory = System.getProperty("user.dir") + "/webdriver/ChromeDriver/chromedriver.exe";
+        String ChromeDriverDirectory = System.getProperty("user.dir") + "/webdriver/ChromeDriver/chromedriver";
         System.setProperty("webdriver.chrome.driver", ChromeDriverDirectory);
         WebDriver myDriver = new ChromeDriver();
         myDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
