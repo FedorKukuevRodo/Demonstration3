@@ -60,7 +60,11 @@ public class Main {
     }
 
     private static void freeSearchAZ(WebDriver myDriver) {
-        String[] makeList = {"Honda", "BMW", "Kia", "Nissan", "Toyota", "Ford", "Mazda"}; //list of makes
+        String[] makeList = { "Acura", "ALFA ROMEO", "Audi", "BMW", "Buick", "Cadillac", "Chevrolet",
+                             "Chrysler", "Dodge", "Fiat", "Ford", "Genesis", "GMC", "Honda",
+                             "Hyundai", "Infiniti", "Jaguar", "Jeep", "Land Rover", "Lexus", "Mazda",
+                             "Mercedes", "Mini", "Mitsubishi", "Porsche", "RAM", "Subaru", "Toyota",
+                             "Volkswagen", "Volvo", "Maserati"};            //list of makes
         String searchResults;                                                        //how many cars of this make found
         for (String make: makeList)                 //starting the cycle
         {
