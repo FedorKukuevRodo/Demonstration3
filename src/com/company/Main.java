@@ -18,11 +18,11 @@ public class Main {
         // page right away it does not stop the script immediately, it keeps trying for 10sec
         myDriver.get("https://www.rodo.com");   //open rodo.com in chrome browser
         myDriver.manage().window().maximize();   //open browser to fullscreen
-        String email = "seltest3+1122@testmail.com"; //email that's going to be used for registration and login
+        String email = "seltest4+1122@testmail.com"; //email that's going to be used for registration and login
         String password = "374502Qq!";           //password
         //Here the script starts to work
-//        registration(myDriver, email, password);                    //calling registration function
-//        logout(myDriver);                                           //calling logout function
+        registration(myDriver, email, password);                    //calling registration function
+        logout(myDriver);                                           //calling logout function
         login(myDriver, email, password);                           //calling login function
         freeSearchAZ(myDriver);                                     //calling freeSearch function
         logout(myDriver);                                           //calling logout function
