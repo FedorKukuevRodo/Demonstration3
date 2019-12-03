@@ -18,9 +18,9 @@ public class Main {
     public static void main(String[] args) throws IOException, InterruptedException, MessagingException {
         //find chrome driver on your machine, only one of them should be uncommented
         //FOR MAC:
-        //System.setProperty("webdriver.chrome.driver", "/Users/jillduhl/Desktop/webdriver/ChromeDriver/chromedriver");
+        System.setProperty("webdriver.chrome.driver", "/Users/jillduhl/Desktop/webdriver/ChromeDriver/chromedriver");
         //FOR WINDOWS:
-        System.setProperty("webdriver.chrome.driver", "D:\\webDriver\\webdriver\\ChromeDriver\\chromedriver.exe");
+        //System.setProperty("webdriver.chrome.driver", "D:\\webDriver\\webdriver\\ChromeDriver\\chromedriver.exe");
         //Testing environment, only one of them should be uncommented
         Env = "prod"; // Testing on prod
         //Env = "dev"; // Testing on dev
