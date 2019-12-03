@@ -1,4 +1,4 @@
-ppackage com.company;
+package com.company;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -89,3 +89,4 @@ public class Main {
         }                                                   //jump in the beginning of cycle with the next make
         System.out.println("freeSearchAZ test completed");  //write in console: test completed
     }
+}
