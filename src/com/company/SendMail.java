@@ -56,17 +56,33 @@ public class SendMail {
             // message.setContent("<h1>This is actual message</h1></br></hr>" +
             // text, "text/html");
             // Set the attachment path
-            String filename = "testData/notFoundReport.csv";
+            String filename = "testData/pricingUnavailableReport.csv";
+            String filename1 = "testData/notFoundCarsReport.csv";
+            String filename2 = "testData/cantLoadPricingCarsReport.csv";
+
             BodyPart objMessageBodyPart = new MimeBodyPart();
             // Option 3: Send text along with attachment
             objMessageBodyPart.setContent(
-                    "<h1>Mail from Selenium Project!</h1></br>" + text, "text/html");
+                    "<h3>A-Z search test results: </h3></br>" + text, "text/html");
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(objMessageBodyPart);
+
             objMessageBodyPart = new MimeBodyPart();
             DataSource source = new FileDataSource(filename);
             objMessageBodyPart.setDataHandler(new DataHandler(source));
             objMessageBodyPart.setFileName(filename);
+            multipart.addBodyPart(objMessageBodyPart);
+
+            objMessageBodyPart = new MimeBodyPart();
+            DataSource source1 = new FileDataSource(filename1);
+            objMessageBodyPart.setDataHandler(new DataHandler(source1));
+            objMessageBodyPart.setFileName(filename1);
+            multipart.addBodyPart(objMessageBodyPart);
+
+            objMessageBodyPart = new MimeBodyPart();
+            DataSource source2 = new FileDataSource(filename2);
+            objMessageBodyPart.setDataHandler(new DataHandler(source2));
+            objMessageBodyPart.setFileName(filename2);
             multipart.addBodyPart(objMessageBodyPart);
             message.setContent(multipart);
             // send message

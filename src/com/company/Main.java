@@ -45,7 +45,7 @@ public class Main {
         //freeMakeSearchAZ(driver);                                     //calling freeSearch function
         //searchSVPcomparePrice(driver);                            //calling searchSVPcomparePrice function
         //logout(driver);                                           //calling logout function
-        //gmail(driver, "fedor.kukuev@rodo.com", "lul", "testbody new updated testbody new updatedtestbody new updated ");
+        System.out.println("Script has finished successfully");
         driver.close();                                           //close the browser
     }
     private static void login(WebDriver driver, String email, String password) {
@@ -85,14 +85,11 @@ public class Main {
     private static void freeMakeSearchAZ(WebDriver driver) {
         String[] makeList = {
                 "Acura", "ALFA ROMEO", "Audi", "BMW", "Buick", "Cadillac", "Chevrolet",
-                //"Chrysler", "Dodge", "Fiat", "Ford", "Genesis", "GMC", "Honda",
-                //"Hyundai", "Infiniti", "Jaguar", "Jeep", "Land Rover", "Lexus", "Mazda",
-                //"Mercedes", "Mini", "Mitsubishi", "Porsche", "RAM", "Subaru", "Toyota",
-                //"Volkswagen", "Volvo",
-                "Maserati"};            //list of makes
-        System.out.println(makeList.toString());
-        makeList[2] = "audiUpdated";
-        System.out.println(makeList.toString());
+                "Chrysler", "Dodge", "Fiat", "Ford", "Genesis", "GMC", "Honda",
+                "Hyundai", "Infiniti", "Jaguar", "Jeep", "Kia", "Land Rover", "Lexus",
+                "Lincoln", "Maserati", "Mazda", "Mercedes", "Mini", "Mitsubishi", "Nissan",
+                "Porsche", "RAM", "Subaru", "Toyota", "Volkswagen", "Volvo"};            //list of makes
+
         String searchResults;                                                        //how many cars of this make found
         for (String make: makeList)                 //starting the cycle
         {
@@ -108,11 +105,10 @@ public class Main {
     private static void searchSVPcomparePrice (WebDriver driver) {
         String[] makeList = {
                 "Acura", "ALFA ROMEO", "Audi", "BMW", "Buick", "Cadillac", "Chevrolet",
-                //"Chrysler", "Dodge", "Fiat", "Ford", "Genesis", "GMC", "Honda",
-                //"Hyundai", "Infiniti", "Jaguar", "Jeep", "Land Rover", "Lexus", "Mazda",
-                //"Mercedes", "Mini", "Mitsubishi", "Porsche", "RAM", "Subaru", "Toyota",
-                //"Volkswagen", "Volvo",
-                 "Maserati"};            //list of makes
+                "Chrysler", "Dodge", "Fiat", "Ford", "Genesis", "GMC", "Honda",
+                "Hyundai", "Infiniti", "Jaguar", "Jeep", "Kia", "Land Rover", "Lexus",
+                "Lincoln", "Maserati", "Mazda", "Mercedes", "Mini", "Mitsubishi", "Nissan",
+                "Porsche", "RAM", "Subaru", "Toyota", "Volkswagen", "Volvo"};            //list of makes
 
         String searchPrice;                                     //Variable to store the price on the search page
         String SVPprice;                                        //Variable to store the price on the SVP
@@ -143,7 +139,7 @@ public class Main {
 
         List<List<String>> records = new ArrayList<>();                     //2D array to store cars from csv, every row is array with cells
         try (BufferedReader br = new BufferedReader(new                     //reading from csv
-                FileReader("D:\\likeSSS\\Demonstration3-master\\testData\\All_Makes_Model_Trim_Year.csv"))) {
+                FileReader("D:\\likeSSS\\Demonstration3-master\\testData\\shortT.csv"))) {
             String line;
             String headerLine = br.readLine();                              //consumer the first line in CSV file ("year,make, model, trim")
             while ((line = br.readLine()) != null) {                        //cycle to go through the csv until the end
@@ -233,20 +229,19 @@ public class Main {
 //!        }
 
         // Writing to cvc files
-        writeToCSV(pricingUnavailableCarsReport, "testData/pricUnvReport.csv");
-        writeToCSV(notFoundCarsReport, "testData/notFoundReport.csv");
-        writeToCSV(cantLoadPricingCarsReport, "testData/cantLoadReport.csv");
+        writeToCSV(pricingUnavailableCarsReport, "testData/pricingUnavailableReport.csv");
+        writeToCSV(notFoundCarsReport, "testData/notFoundCarsReport.csv");
+        writeToCSV(cantLoadPricingCarsReport, "testData/cantLoadPricingCarsReport.csv");
 
         //sending an email with report
-        String to[] = {"fedor.kukuev@rodo.com"};
-        SendMail.send("rodotestmail@gmail.com", to, "sendMail subject", "Check the PDF attachment.");
-
-        String emailReport = "Pricing Unavailable Cars: " + pricingUnavailableCars.toString() + System.lineSeparator()
-                + "Not Found Cars: " + notFoundCars.toString() + System.lineSeparator()
+        String emailReport = "Pricing Unavailable Cars: " + pricingUnavailableCars.toString() + "<br>"
+                + "Not Found Cars: " + notFoundCars.toString() + "<br>"
                 + "Can't Load Pricing Cars: " + cantLoadPricingCars.toString();
         Date date = new Date(); // this object contains the current date value
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        gmail(driver, "fedor.kukuev@rodo.com", "Free Full Search Report: " + formatter.format(date), emailReport);
+        String to[] = {"fedor.kukuev@rodo.com"};
+        SendMail.send("rodotestmail@gmail.com", to, "Free Full Search Report: " + formatter.format(date), emailReport);
+
         driver.get(rodoUrl);                          //back to home page
         System.out.println("freeFullSearch test completed");  //write in console: test completed
     }
@@ -254,7 +249,7 @@ public class Main {
     private static void writeToCSV(List<List<String>> dataArray, String path) throws IOException {
         if (dataArray.size() > 0) {
             FileWriter csvWriter = new FileWriter(path);
-            csvWriter.append("yearLUL");
+            csvWriter.append("year");
             csvWriter.append(",");
             csvWriter.append("make");
             csvWriter.append(",");
@@ -272,7 +267,9 @@ public class Main {
         }
     }
 
+    //this function logins to gmail website and sends an email
     private static void gmail(WebDriver driver, String recipient, String subject, String body) throws InterruptedException {
+        //gmail(driver, "fedor.kukuev@rodo.com", "Free Full Search Report: " + formatter.format(date), emailReport);
         driver.get("https://accounts.google.com/signin/v2/identifier?continue=https%3A%2F%2Fmail.google.com%2Fmail%2F&service=mail&sacu=1&rip=1&flowName=GlifWebSignIn&flowEntry=ServiceLogin");
         driver.findElement(By.xpath("//*[@id='identifierId']")).sendKeys("rodotestmail@gmail.com");
         driver.findElement(By.xpath("//*[@id='identifierNext']")).click();
