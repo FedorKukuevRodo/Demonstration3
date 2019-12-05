@@ -56,10 +56,20 @@ public class SendMail {
             // message.setContent("<h1>This is actual message</h1></br></hr>" +
             // text, "text/html");
             // Set the attachment path
-            String filename = "testData/pricingUnavailableReport.csv";
-            String filename1 = "testData/notFoundCarsReport.csv";
-            String filename2 = "testData/cantLoadPricingCarsReport.csv";
-
+            //String OS = System.getProperty("os.name");
+            String filename = "";
+            String filename1 = "";
+            String filename2 = "";
+            if (Main.OS.equals("Windows 10")) {      //what is Operation System of your machine
+                 filename = "testData/pricingUnavailableReport.csv";
+                 filename1 = "testData/notFoundCarsReport.csv";
+                 filename2 = "testData/cantLoadPricingCarsReport.csv";
+            }
+            if (Main.OS.equals("Mac OS X")) {
+                 filename = "/Users/jillduhl/Desktop/Demonstration3-master/testData/pricingUnavailableReport.csv";
+                 filename1 = "/Users/jillduhl/Desktop/Demonstration3-master/testData/notFoundCarsReport.csv";
+                 filename2 = "/Users/jillduhl/Desktop/Demonstration3-master/testData/cantLoadPricingCarsReport.csv";
+            }
             BodyPart objMessageBodyPart = new MimeBodyPart();
             // Option 3: Send text along with attachment
             objMessageBodyPart.setContent(
@@ -70,19 +80,19 @@ public class SendMail {
             objMessageBodyPart = new MimeBodyPart();
             DataSource source = new FileDataSource(filename);
             objMessageBodyPart.setDataHandler(new DataHandler(source));
-            objMessageBodyPart.setFileName(filename);
+            objMessageBodyPart.setFileName("pricingUnavailableReport.csv");
             multipart.addBodyPart(objMessageBodyPart);
 
             objMessageBodyPart = new MimeBodyPart();
             DataSource source1 = new FileDataSource(filename1);
             objMessageBodyPart.setDataHandler(new DataHandler(source1));
-            objMessageBodyPart.setFileName(filename1);
+            objMessageBodyPart.setFileName("notFoundCarsReport.csv");
             multipart.addBodyPart(objMessageBodyPart);
 
             objMessageBodyPart = new MimeBodyPart();
             DataSource source2 = new FileDataSource(filename2);
             objMessageBodyPart.setDataHandler(new DataHandler(source2));
-            objMessageBodyPart.setFileName(filename2);
+            objMessageBodyPart.setFileName("cantLoadPricingCarsReport.csv");
             multipart.addBodyPart(objMessageBodyPart);
             message.setContent(multipart);
             // send message

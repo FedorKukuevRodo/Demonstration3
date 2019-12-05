@@ -14,13 +14,15 @@ import java.util.concurrent.TimeUnit;
 public class Main {
     private static String rodoUrl;
     private static String Env;
+    static String OS;
 
     public static void main(String[] args) throws IOException, InterruptedException, MessagingException {
-        //find chrome driver on your machine, only one of them should be uncommented
-        //FOR MAC:
-        System.setProperty("webdriver.chrome.driver", "/Users/jillduhl/Desktop/webdriver/ChromeDriver/chromedriver");
-        //FOR WINDOWS:
-        //System.setProperty("webdriver.chrome.driver", "D:\\webDriver\\webdriver\\ChromeDriver\\chromedriver.exe");
+        OS = System.getProperty("os.name");     //what is Operation System of your machine: Mac OS X or Windows 10
+        //find chrome driver on your machine
+        //FOR MAC OS X:
+        if (OS.equals("Mac OS X")) { System.setProperty("webdriver.chrome.driver", "/Users/jillduhl/Desktop/webdriver/ChromeDriver/chromedriver"); }
+        //FOR WINDOWS 10:
+        if (OS.equals("Windows 10")) { System.setProperty("webdriver.chrome.driver", "D:\\webDriver\\webdriver\\ChromeDriver\\chromedriver.exe"); }
         //Testing environment, only one of them should be uncommented
         Env = "prod"; // Testing on prod
         //Env = "dev"; // Testing on dev
@@ -31,7 +33,7 @@ public class Main {
         if (Env == "prod") {
             rodoUrl = "https://www.rodo.com";
         } else {rodoUrl = "https://web.dev.rodo.com";}
-        driver.get(rodoUrl);   //open rodo.com in chrome browser
+        driver.get(rodoUrl);   //open www.rodo.com or web.dev.rodo.com in chrome browser
         driver.manage().window().maximize();   //open browser to fullscreen
         String email = "fkukuev@honcker.com";   //email that's going to be used for registration and login
         //String email = "jduhl+test" + (int)(Math.random() * 99999 + 1) + "@test.com"; //in case if you want email to be random
@@ -138,8 +140,13 @@ public class Main {
     private static void freeFullSearch (WebDriver driver) throws IOException, InterruptedException, MessagingException {
 
         List<List<String>> records = new ArrayList<>();                     //2D array to store cars from csv, every row is array with cells
+        String fileName = "";
+        //FOR MAC OS X:
+        if (OS.equals("Windows 10")) {fileName = "D:\\likeSSS\\Demonstration3-master\\testData\\shortT.csv";}
+        //FOR WINDOWS 10:
+        if (OS.equals("Mac OS X")) {fileName = "/Users/jillduhl/Desktop/Demonstration3-master/testData/All_Makes_Model_Trim_Year.csv";}
         try (BufferedReader br = new BufferedReader(new                     //reading from csv
-                FileReader("D:\\likeSSS\\Demonstration3-master\\testData\\shortT.csv"))) {
+                FileReader(fileName))) {
             String line;
             String headerLine = br.readLine();                              //consumer the first line in CSV file ("year,make, model, trim")
             while ((line = br.readLine()) != null) {                        //cycle to go through the csv until the end
@@ -194,11 +201,11 @@ public class Main {
         }                                                   //jump in the beginning of cycle with the next car
         System.out.println("main cycle completed");
         System.out.println("pricingUnavailableCars: " + pricingUnavailableCars); //write in console the array with pricing unavailable cars
-        System.out.println("pricingUnavailableCars: " + pricingUnavailableCarsReport);
+        System.out.println("pricingUnavailableCarsReport: " + pricingUnavailableCarsReport);
         System.out.println("notFoundCars: " + notFoundCars);                //write in console the array with not Found cars
-        System.out.println("notFoundCars: " + notFoundCarsReport);
+        System.out.println("notFoundCarsReport: " + notFoundCarsReport);
         System.out.println("cantLoadPricingCars: " + cantLoadPricingCars); //write in console the array with car that could not load the price/page
-        System.out.println("cantLoadPricingCars: " + cantLoadPricingCarsReport);
+        System.out.println("cantLoadPricingCarsReport: " + cantLoadPricingCarsReport);
 //!        if (cantLoadPricingCars.size() > 0) {                           //if there any cars that could not load the price
 //            Iterator itr = cantLoadPricingCars.iterator();              //iterator to through the array with  cars
 //            while (itr.hasNext())                                       //starting the cycle to go through them again
@@ -228,18 +235,27 @@ public class Main {
 //            System.out.println("cantLoadPricingCars: " + cantLoadPricingCars);       //write in console the array with car that could not load the price/page
 //!        }
 
-        // Writing to cvc files
-        writeToCSV(pricingUnavailableCarsReport, "testData/pricingUnavailableReport.csv");
-        writeToCSV(notFoundCarsReport, "testData/notFoundCarsReport.csv");
-        writeToCSV(cantLoadPricingCarsReport, "testData/cantLoadPricingCarsReport.csv");
+        // Writing to csv files WINDOWS 10
+        if (OS.equals("Windows 10")) {
+            writeToCSV(pricingUnavailableCarsReport, "testData/pricingUnavailableReport.csv");
+            writeToCSV(notFoundCarsReport, "testData/notFoundCarsReport.csv");
+            writeToCSV(cantLoadPricingCarsReport, "testData/cantLoadPricingCarsReport.csv");
+        }
+//        // Writing to cvc files
+        if (OS.equals("Mac OS X")) {
+            writeToCSV(pricingUnavailableCarsReport, "/Users/jillduhl/Desktop/Demonstration3-master/testData/pricingUnavailableReport.csv");
+            writeToCSV(notFoundCarsReport, "/Users/jillduhl/Desktop/Demonstration3-master/testData/notFoundCarsReport.csv");
+            writeToCSV(cantLoadPricingCarsReport, "/Users/jillduhl/Desktop/Demonstration3-master/testData/cantLoadPricingCarsReport.csv");
+        }
 
         //sending an email with report
         String emailReport = "Pricing Unavailable Cars: " + pricingUnavailableCars.toString() + "<br>"
                 + "Not Found Cars: " + notFoundCars.toString() + "<br>"
                 + "Can't Load Pricing Cars: " + cantLoadPricingCars.toString();
         Date date = new Date(); // this object contains the current date value
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        String to[] = {"fedor.kukuev@rodo.com"};
+        TimeZone.setDefault(TimeZone.getTimeZone("EST"));
+        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+        String to[] = {"fedor.kukuev@rodo.com", "jduhl@rodo.com"};
         SendMail.send("rodotestmail@gmail.com", to, "Free Full Search Report: " + formatter.format(date), emailReport);
 
         driver.get(rodoUrl);                          //back to home page
@@ -247,8 +263,8 @@ public class Main {
     }
 
     private static void writeToCSV(List<List<String>> dataArray, String path) throws IOException {
+        FileWriter csvWriter = new FileWriter(path);
         if (dataArray.size() > 0) {
-            FileWriter csvWriter = new FileWriter(path);
             csvWriter.append("year");
             csvWriter.append(",");
             csvWriter.append("make");
@@ -262,9 +278,11 @@ public class Main {
                 csvWriter.append(String.join(",", rowData));
                 csvWriter.append("\n");
             }
-            csvWriter.flush();
-            csvWriter.close();
+        } else {
+            csvWriter.append("empty");
         }
+        csvWriter.flush();
+        csvWriter.close();
     }
 
     //this function logins to gmail website and sends an email
