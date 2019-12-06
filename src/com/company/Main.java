@@ -28,7 +28,7 @@ public class Main {
         //Env = "dev"; // Testing on dev
 
         WebDriver driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS); //if it can't find an element on the
+        driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS); //if it can't find an element on the
         // page right away it does not stop the script immediately, it keeps trying for 10sec
         if (Env == "prod") {
             rodoUrl = "https://www.rodo.com";
@@ -42,11 +42,11 @@ public class Main {
         //Here the script starts to work
         //registration(driver, email, password);                      //calling registration function
         //logout(driver);                                           //calling logout function
-        login(driver, email, password);                           //calling login function
-        freeFullSearch(driver);
+        login(driver, email, password);                             //calling login function
+        //freeFullSearch(driver);                                   //calling freeFullSearch function
         //freeMakeSearchAZ(driver);                                     //calling freeSearch function
-        //searchSVPcomparePrice(driver);                            //calling searchSVPcomparePrice function
-        //logout(driver);                                           //calling logout function
+        searchSVPcomparePrice(driver);                            //calling searchSVPcomparePrice function
+        logout(driver);                                           //calling logout function
         System.out.println("Script has finished successfully");
         driver.close();                                           //close the browser
     }
@@ -114,6 +114,7 @@ public class Main {
 
         String searchPrice;                                     //Variable to store the price on the search page
         String SVPprice;                                        //Variable to store the price on the SVP
+        String testResult = "Passed";
         for (String make: makeList)                             //starting the cycle
         {
             driver.findElement(By.xpath("//input[@id='search_term']")).sendKeys(make); //typing honda/bmw/kia..etc in the search input field
@@ -131,10 +132,13 @@ public class Main {
             System.out.println(make + "- price on SVP: " + SVPprice);  //write the SVP price in console
             if (searchPrice.equals(SVPprice)) {                        //if price is the same on both pages
                 System.out.println(make + " passed");                  //write in console that make passed
-            } else  System.out.println(make + " failed");              //if price is not the same: write in console that make failed
+            } else  {
+                System.out.println(make + " FAILED!");                   //if price is not the same: write in console that make failed
+                testResult = "FAILED!";
+            }
             driver.get(rodoUrl);                                     //go back to home page
         }                                                              //end of cycle
-        System.out.println("searchSVPcomparePrice test completed");    //write in console: test completed
+        System.out.println("searchSVPcomparePrice test completed:" + testResult);    //write in console: test completed
     }
 
     private static void freeFullSearch (WebDriver driver) throws IOException, InterruptedException, MessagingException {
