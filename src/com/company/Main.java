@@ -24,18 +24,22 @@ public class Main {
         //FOR WINDOWS 10:
         if (OS.equals("Windows 10")) { System.setProperty("webdriver.chrome.driver", "D:\\webDriver\\webdriver\\ChromeDriver\\chromedriver.exe"); }
         //Testing environment, only one of them should be uncommented
-        Env = "prod"; // Testing on prod
-        //Env = "dev"; // Testing on dev
+        //Env = "prod"; // Testing on prod
+        Env = "dev"; // Testing on dev
 
         WebDriver driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS); //if it can't find an element on the
         // page right away it does not stop the script immediately, it keeps trying for 10sec
+        String email = "";
         if (Env == "prod") {
             rodoUrl = "https://www.rodo.com";
-        } else {rodoUrl = "https://web.dev.rodo.com";}
+            email = "fedor.kukuev+1216@rodo.com";   //email that's going to be used for registration and login
+        } else {
+            rodoUrl = "https://web.dev.rodo.com";
+            email = "fedor.kukuev+1217@rodo.com";   //email that's going to be used for registration and login
+        }
         driver.get(rodoUrl);   //open www.rodo.com or web.dev.rodo.com in chrome browser
         driver.manage().window().maximize();   //open browser to fullscreen
-        String email = "fkukuev@honcker.com";   //email that's going to be used for registration and login
         //String email = "jduhl+test" + (int)(Math.random() * 99999 + 1) + "@test.com"; //in case if you want email to be random
         String password = "374502Qq!";                        //password
 
@@ -46,7 +50,7 @@ public class Main {
         //freeFullSearch(driver);                                   //calling freeFullSearch function
         //freeMakeSearchAZ(driver);                                     //calling freeSearch function
         searchSVPcomparePrice(driver);                            //calling searchSVPcomparePrice function
-        logout(driver);                                           //calling logout function
+        //logout(driver);                                           //calling logout function
         System.out.println("Script has finished successfully");
         driver.close();                                           //close the browser
     }
@@ -104,7 +108,7 @@ public class Main {
         System.out.println("freeSearchAZ test completed");  //write in console: test completed
     }
 
-    private static void searchSVPcomparePrice (WebDriver driver) {
+    private static void searchSVPcomparePrice (WebDriver driver) throws InterruptedException {
         String[] makeList = {
                 "Acura", "ALFA ROMEO", "Audi", "BMW", "Buick", "Cadillac", "Chevrolet",
                 "Chrysler", "Dodge", "Fiat", "Ford", "Genesis", "GMC", "Honda",
@@ -119,7 +123,10 @@ public class Main {
         {
             driver.findElement(By.xpath("//input[@id='search_term']")).sendKeys(make); //typing honda/bmw/kia..etc in the search input field
             driver.findElement(By.xpath("//button[@class='search-btn']")).click();     //clicking on the search icon
-            searchPrice = driver.findElement(By.xpath("//*[@id='__next']/div/div/div/div/ul/li[2]/div/div[1]/div[2]/strong")).getText(); // getting the price of the first car on the page
+            Thread.sleep(5000); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+            searchPrice = driver.findElement(By.xpath("(//strong[@class='monthly-cost-txt'])[1]")).getText(); // getting the price of the first car on the page
+            //searchPrice = driver.findElement(By.xpath("//*[@id='__next']/div/div/div/div/ul/li[2]/div/div[1]/div[2]/strong")).getText(); // getting the price of the first car on the page
             if (searchPrice.equals("Pricing Unavailable")) {        //if that price is unavailable
                 System.out.println(make + ' ' + searchPrice);       //write in console: [make] is pricing unavailable
                 driver.get(rodoUrl);                              //go back to home page
@@ -127,7 +134,8 @@ public class Main {
             }
             System.out.println(make + " - price on search page: " +searchPrice);                   //if price is ok: write in console the price
             driver.findElement(By.xpath("//*[@id='__next']/div/div/div/div/ul/li[2]")).click(); //click on the tile to go to SVP
-            SVPprice = driver.findElement(By.xpath("//*[@id='__next']/div/div[2]/div/div/div[5]/div[2]/div[1]/div[1]/div/span")).getText();  //on SVP get the price
+            Thread.sleep(5000); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            SVPprice = driver.findElement(By.xpath("//div[@class='po-price-txt']/span")).getText();  //on SVP get the price
                                                       //*[@id="__next"]/div/div[2]/div/div/div[5]/div[2]/div[1]/div[1]/div/span
             System.out.println(make + "- price on SVP: " + SVPprice);  //write the SVP price in console
             if (searchPrice.equals(SVPprice)) {                        //if price is the same on both pages
@@ -260,7 +268,7 @@ public class Main {
         TimeZone.setDefault(TimeZone.getTimeZone("EST"));
         SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
         String to[] = {"fedor.kukuev@rodo.com", "jduhl@rodo.com"};
-        SendMail.send("rodotestmail@gmail.com", to, "Free Full Search Report: " + formatter.format(date), emailReport);
+        //SendMail.send("rodotestmail@gmail.com", to, "Free Full Search Report: " + formatter.format(date), emailReport);
 
         driver.get(rodoUrl);                          //back to home page
         System.out.println("freeFullSearch test completed");  //write in console: test completed
